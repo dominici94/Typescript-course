@@ -1,70 +1,45 @@
-class Department {
-  // private readonly id: string;
-  // private name: string;
-  private employees: string[] = [];
+// type AddFn = (a: number, b: number) => number;
+interface AddFn {
+  (a: number, b: number): number;
+}
 
-  constructor(private readonly id: string, public name: string) {
-    // this.id = id;
-    // this.name = n;
+let add: AddFn;
+add = (n1: number, n2: number) => {
+  return n1 + n2;
+};
+
+interface Named {
+  readonly name: string;
+  outoputName?: string;
+}
+
+interface Greetable extends Named {
+  greet(phrase: string): void;
+}
+
+class Person implements Greetable {
+  name: string;
+  age = 30;
+
+  constructor(n: string) {
+    this.name = n;
   }
 
-  describe(this: Department) {
-    console.log(`Department: ${this.name}\nID: ${this.id}`);
-  }
-
-  addEmploye(employee: string) {
-    this.employees.push(employee);
-  }
-
-  printEmployeeInformation() {
-    console.log(this.employees.length);
-    console.log(this.employees);
+  greet(phrase: string) {
+    console.log(phrase + " " + this.name);
   }
 }
 
-class ITDepartment extends Department {
-  admins: string[];
-  constructor(id: string, admins: string[]) {
-    super(id, "IT");
-    this.admins = admins;
-  }
-}
+let user1: Person;
 
-class AccountingDepartment extends Department {
-  constructor(id: string, private reports: string[]) {
-    super(id, "Accounting");
-  }
+// user1 = {
+//   name: "Max",
+//   age: 23,
+//   greet(phrase: string) {
+//     console.log(phrase + " " + this.name);
+//   },
+// };
 
-  addReport(text: string) {
-    this.reports.push(text);
-  }
+user1 = new Person("Max");
 
-  printReports() {
-    console.log(this.reports);
-  }
-}
-
-const it = new ITDepartment("d1", ["Max"]);
-
-it.addEmploye("Max");
-it.addEmploye("Manu");
-
-// it.employees[2] = "Bug";
-
-// console.log(it);
-it.describe();
-
-it.printEmployeeInformation();
-
-console.log(it);
-
-const accounting = new AccountingDepartment("d2", []);
-
-accounting.addReport("Some example reports");
-
-accounting.printReports();
-
-// const accountingCopy = { name: "s", describe: accounting.describe };
-// const accountingCopy = new Department("pippozzo");
-
-// accountingCopy.describe();
+user1.greet("Hi there, I am");
