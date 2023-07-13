@@ -74,3 +74,55 @@ function useVehicle(vehicle: Vehicle) {
 
 useVehicle(v1);
 useVehicle(v2);
+
+// DISCRIMINATED UNION
+interface Bird {
+  type: "bird";
+  flyingSpeed: number;
+}
+
+interface Horse {
+  type: "horse";
+  runningSpeed: number;
+}
+
+type Animal = Bird | Horse;
+
+function moveAnimal(animal: Animal) {
+  let speed;
+  switch (animal.type) {
+    case "bird":
+      speed = animal.flyingSpeed;
+      break;
+    case "horse":
+      speed = animal.runningSpeed;
+  }
+  console.log("Moving with speed: " + speed);
+}
+
+moveAnimal({ type: "bird", flyingSpeed: 24 });
+
+// TYPE CASTING 1
+// const userInputElement = <HTMLInputElement>(
+//   document.getElementById("user-input")
+// );
+// TYPE CASTING 2
+const userInputElement = document.getElementById(
+  "user-input"
+) as HTMLInputElement;
+
+userInputElement.value = "Hi there";
+
+// { email: 'Not a valid email', username: 'Must start with a character!' }
+interface ErrorContainer {
+  [prop: string]: string;
+}
+
+const errorBag: ErrorContainer = {
+  email: "Not a valid email!",
+};
+
+const errorBag2: ErrorContainer = {
+  email: "Not a valid email!",
+  username: "Must start with a  capital character",
+};
