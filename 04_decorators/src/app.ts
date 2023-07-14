@@ -59,10 +59,6 @@ class Product {
     }
   }
 
-  // get price() {
-  //   return this._price;
-  // }
-
   constructor(t: string, p: number) {
     this.title = t;
     this._price = p;
