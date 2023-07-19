@@ -1,3 +1,15 @@
+// Drag and Drop Interfaces
+interface Draggable {
+  DragStartHandler(event: DragEvent): void;
+  DragEndHandler(event: DragEvent): void;
+}
+
+interface DragTarget {
+  DragOverHandler(event: DragEvent): void;
+  DropHandler(event: DragEvent): void;
+  DragLeaveHandler(event: DragEvent): void;
+}
+
 // Project Type
 enum ProjectStatus {
   Active,
@@ -157,7 +169,10 @@ abstract class Component<T extends HTMLElement, U extends HTMLElement> {
 }
 
 // ProjectItem Class
-class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
+class ProjectItem
+  extends Component<HTMLUListElement, HTMLLIElement>
+  implements Draggable
+{
   private project: Project;
 
   get persons() {
@@ -176,7 +191,19 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
     this.renderContent();
   }
 
-  configure(): void {}
+  @autobind
+  DragStartHandler(event: DragEvent): void {
+    console.log(event);
+  }
+
+  DragEndHandler(_: DragEvent): void {
+    console.log("dragend event!!!");
+  }
+
+  configure(): void {
+    this.element.addEventListener("dragstart", this.DragStartHandler);
+    this.element.addEventListener("dragend", this.DragEndHandler);
+  }
 
   renderContent(): void {
     this.element.querySelector("h2")!.textContent = this.project.title;
@@ -186,7 +213,10 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
 }
 
 // ProjectList Class
-class ProjectList extends Component<HTMLDivElement, HTMLElement> {
+class ProjectList
+  extends Component<HTMLDivElement, HTMLElement>
+  implements DragTarget
+{
   assignedProjects: Project[];
 
   constructor(private type: "active" | "finished") {
@@ -198,7 +228,25 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> {
     this.renderContent();
   }
 
+  @autobind
+  DragOverHandler(_: DragEvent): void {
+    const listEl = this.element.querySelector("ul")!;
+    listEl.classList.add("droppable");
+  }
+
+  DropHandler(_: DragEvent): void {}
+
+  @autobind
+  DragLeaveHandler(_: DragEvent): void {
+    const listEl = this.element.querySelector("ul")!;
+    listEl.classList.remove("droppable");
+  }
+
   configure(): void {
+    this.element.addEventListener("dragover", this.DragOverHandler);
+    this.element.addEventListener("dragleave", this.DragLeaveHandler);
+    this.element.addEventListener("drop", this.DropHandler);
+
     projectState.addListener((projects: Project[]) => {
       const relevantProjects = projects.filter((prj) => {
         if (this.type === "active") {
