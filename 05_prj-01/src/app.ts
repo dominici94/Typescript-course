@@ -243,7 +243,14 @@ namespace App {
       }
     }
 
-    DropHandler(_: DragEvent): void {}
+    @autobind
+    DropHandler(event: DragEvent): void {
+      const prjId = event.dataTransfer!.getData("text/plain");
+      projectState.moveProject(
+        prjId,
+        this.type === "active" ? ProjectStatus.Active : ProjectStatus.Finished
+      );
+    }
 
     @autobind
     DragLeaveHandler(_: DragEvent): void {
