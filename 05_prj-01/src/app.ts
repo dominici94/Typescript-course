@@ -368,7 +368,7 @@ namespace App {
     }
   }
 
-  const prjInput = new ProjectInput();
-  const activePrjList = new ProjectList("active");
-  const finishedPrjList2 = new ProjectList("finished");
+  new ProjectInput();
+  new ProjectList("active");
+  new ProjectList("finished");
 }
